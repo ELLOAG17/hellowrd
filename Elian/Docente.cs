@@ -3,7 +3,7 @@ namespace HolaMundo.Elian;
 //PascalCase
 class Docente
 {
-    public int id { get; set;}
+    public int Id { get;}
 
     public int NumeroDeEmpleado { get; set;}
 
@@ -11,8 +11,8 @@ class Docente
 
     public string? Apellidos {get; set;}
 
-    public docente(){
-        this.id = new random().next(1,100);
+    public Docente(){
+        this.Id = new random().next(1,100);
         
     }
 }
