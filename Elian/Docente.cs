@@ -1,18 +1,40 @@
-namespace HolaMundo.Elian;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using HelloWrd.Lopez;
+namespace HelloWrd.Elian;
+
 
 //PascalCase
+[Table("Docente")]
 class Docente
 {
-    public int Id { get;}
+  public int Id { get; private set; }  
 
-    public int NumeroDeEmpleado { get; set;}
+  [Required]
 
-    public string? Nombres { get; set;}
+  public int NumeroDeEmpleado { get; set; }
 
-    public string? Apellidos {get; set;}
+  [Required, MaxLength(50)]
 
-    public Docente(){
-        this.Id = new random().next(1,100);
-        
-    }
+  public string? Nombres { get; set; }
+
+  [Required, MaxLength(50)]
+
+  public string? Apellidos { get; set; }
+
+  [NotMapped]
+
+  public List<Actividad> Actividad {get; set;}
+
+  public Docente()
+  {
+    this.Id = new Random().Next(1, 100);
+    this.Actividad = new List<Actividad>();
+
+  }
+
+}
+
+internal class requiredAttribute : Attribute
+{
 }

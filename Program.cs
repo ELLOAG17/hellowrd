@@ -1,30 +1,68 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿using HelloWrd;
+using HelloWrd.Lopez;
+using HelloWrd.Elian;
+//codigoanterior();
+
+CrearBaseDeDatos();
+
+static void CrearBaseDeDatos()
+{
+    //Resources tienen metodos para abrir y cerrar acciones
+    using ( var Db = new SqliteDbContext()) 
+    {
+       db.Database.EnsureCreated();
+    }
+}
+
+
+static void codigoanterior()
+{
 Console.WriteLine("Hello, World!");
 
-var Docente1 = new Docente();
-Docente1.Nombres= "Elian Lopez";
-Docente1.Apellidos= "Aguilar";
-Docente1.NumeroDeEmpleado= "1234";
+//Crear docentes y actividades
+var docente1 = new Docente();
+docente1.Nombres = "Jose Luis";
+docente1.Apellidos = "Gaxiola Castro";
+docente1.NumeroDeEmpleado = 1234;
 
-//Docente1.id= 1;
-var Actividad1 = new Actividad
+var actividad1 = new Actividad
 {
     FechaDeRegistro = DateTime.Now,
-    DocenteId = Docente1.Id,
-    EjeTematico ="eje1";
-    Subeje = "Subeje2";
-    Descripcion="nodormirseenclase";
-
+    DocenteId = docente1.Id,
+    Ejetematico = "Eje1",
+    Subeje = "Subeje2",
+    Descripcion = "No dormirse en clase"
 };
 
-var Actividad2 = new Actividad
+var actividad2 = new Actividad
 {
     FechaDeRegistro = DateTime.Today,
-    DocenteId = Docente1.Id,
-    EjeTematico ="eje2";
-    Subeje = "Subeje3";
-    Descripcion="Trabajar en viernes";
+    DocenteId = docente1.Id,
+    Ejetematico = "Eje2",
+    Subeje = "subeje3",
+    Descripcion = "Trabajar en viernes"
 };
 
-Console.WriteLine($"Actividad: {Actividad1.Descripcion}");
-Console.WriteLine($"Actividad: {Actividad2.Descripcion}");
+// TODO: Imprimir la descripcion de las actividades creadas y 
+// que muestre el nombre del docente
+
+Console.WriteLine($"Actividad: {actividad1.Descripcion}, Docente: {actividad1.DocenteId}");
+Console.WriteLine($"Actividad: {actividad2.Descripcion}, Docente: {actividad2.DocenteId}");
+
+// SELECT * FROM Actividades WHERE Docenteid=1;
+//Retornar 2 registros vinculados al profesor 1 
+docente1.Actividad.Add(actividad1);
+docente1.Actividad.Add(actividad2);
+//SELECT * FROM Docentes WHERE id=[actividad1.Docenteid];
+actividad1.Docente = docente1;
+actividad2.Docente = docente1;
+
+// TODO: Imprimir la descripcion de las actividades creadas
+//y que muestren el nombre del docente
+Console.WriteLine($"Docente: {docente1.Nombres} {docente1.Apellidos}");
+Console.WriteLine("Actividad");
+foreach (var Actividad in docente1.Actividad)
+{
+    Console.WriteLine(Actividad.Descripcion);
+}
+}
