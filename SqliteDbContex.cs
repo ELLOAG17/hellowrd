@@ -16,6 +16,7 @@ class SqliteDbContext : DbContext
     {
         optionsBuilder.UseSqlite("Data source=Db/Bd");
         base.OnConfiguring(optionsBuilder);
+        
     }
 
     
