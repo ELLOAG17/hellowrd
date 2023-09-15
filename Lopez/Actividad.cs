@@ -33,9 +33,6 @@ class Actividad
     
     public Docente? Docente { get; set;}
 
-    public Actividad()
-    {
-        this.Id = new Random().Next(1, 100);
-    }
+  
 
 }

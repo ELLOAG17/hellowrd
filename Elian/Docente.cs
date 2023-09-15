@@ -28,8 +28,7 @@ class Docente
 
   public Docente()
   {
-    this.Id = new Random().Next(1, 100);
-    this.Actividad = new List<Actividad>();
+    
 
   }
 

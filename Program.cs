@@ -2,8 +2,13 @@
 using HelloWrd.Lopez;
 using HelloWrd.Elian;
 //codigoanterior();
+//CrearBaseDeDatos();
+static void EliminarBaseDeDatos()
+{
+    using  (var db = new )
+}
 
-CrearBaseDeDatos();
+
 
 static void CrearBaseDeDatos()
 {
