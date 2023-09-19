@@ -5,10 +5,10 @@ using Microsoft.EntityFrameworkCore;
 
 // CodigoAnterior();
 // EliminarBaseDeDatos();
-//CrearBaseDeDatos();
+// CrearBaseDeDatos();
 // RegistrarPrimerDocente();
 // RegistrarDosActividades();
-// BuscarDocentePorId(1);
+BuscarDocentePorId(1);
 MostrarActividadesDeUnDocente(1);
 
 static void MostrarActividadesDeUnDocente(int docenteId)
