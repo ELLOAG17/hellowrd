@@ -4,36 +4,28 @@ using HelloWrd.Lopez;
 namespace HelloWrd.Elian;
 
 
-//PascalCase
-[Table("Docente")]
+//PasacalCase
+[Table("Docentes")]
 class Docente
 {
-  public int Id { get; private set; }  
+    public int Id { get; private set;}
 
-  [Required]
+    [Required]
+    public int NumDeEmpleado {get; set;}
 
-  public int NumeroDeEmpleado { get; set; }
+    [Required, MaxLength(50)]
+    public string? Nombres {get; set;}
 
-  [Required, MaxLength(50)]
 
-  public string? Nombres { get; set; }
+    [Required, MaxLength(50)]
+    public string? Apellidos {get; set;}
 
-  [Required, MaxLength(50)]
+    [NotMapped]
+    public List<Actividad> Actividades { get; set; }
 
-  public string? Apellidos { get; set; }
-
-  [NotMapped]
-
-  public List<Actividad> Actividad {get; set;}
-
-  public Docente()
-  {
-    
-
-  }
-
-}
-
-internal class requiredAttribute : Attribute
-{
+    // public Docente()
+    // {
+    //     this.Id = new Random().Next(1,100);
+    //     this.Actividades = new List<Actividad>();
+    // }
 }

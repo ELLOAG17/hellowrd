@@ -1,73 +1,190 @@
 ﻿using HelloWrd;
 using HelloWrd.Lopez;
 using HelloWrd.Elian;
-//codigoanterior();
+using Microsoft.EntityFrameworkCore;
+
+// CodigoAnterior();
+// EliminarBaseDeDatos();
 //CrearBaseDeDatos();
-static void EliminarBaseDeDatos()
+// RegistrarPrimerDocente();
+// RegistrarDosActividades();
+// BuscarDocentePorId(1);
+MostrarActividadesDeUnDocente(1);
+
+static void MostrarActividadesDeUnDocente(int docenteId)
 {
-    using  (var db = new )
+    using (var db = new SqliteDbContext())
+    {
+        var actividades = db.Actividades
+            .Where(a => a.DocenteId == docenteId)
+            .Include(a => a.Docente)
+            .ToList();
+        if (actividades.Count > 0)
+        {
+            foreach (var actividad in actividades)
+            {
+                Console.WriteLine(
+                    $"Actividad {actividad.Id}: {actividad.Descripcion}, Docente: {actividad.Docente.Nombres}");
+            }
+        }
+        else
+        {
+            Console.WriteLine("No se encontraron actividades");
+        }
+    }
 }
 
-
-
-static void CrearBaseDeDatos()
+static void BuscarDocentePorId(int id)
 {
-    //Resources tienen metodos para abrir y cerrar acciones
-    using ( var Db = new SqliteDbContext()) 
+    using (var db = new SqliteDbContext())
     {
-       db.Database.EnsureCreated();
+        var docente = db.Docentes.Find(id);
+        if (docente is null)
+        {
+            throw new Exception($"Docente no encontrado con el id {id}");
+        }
+
+        Console.WriteLine($"Docente {docente.Nombres} encontrado");
+    }
+}
+
+static void RegistrarDosActividades()
+{
+    var numEmpleado = 123;
+    Docente docente;
+    try
+    {
+        docente = BuscarDocentePorNumeroDeEmpleado(numEmpleado);
+    }
+    catch (NullReferenceException ex)
+    {
+        throw new Exception(ex.Message);
+    }
+
+    // definir las actividades
+    var actividades = new List<Actividad>
+    {
+        new Actividad
+        {
+            FechaDeRegistro = DateTime.Now,
+            DocenteId = docente.Id,
+            EjeTematico = "Eje 1",
+            Subeje = "Subeje 1.1",
+            Descripcion = "Descripción 1.1"
+        },
+        new Actividad
+        {
+            FechaDeRegistro = DateTime.Now,
+            DocenteId = docente.Id,
+            EjeTematico = "Eje 1",
+            Subeje = "Subeje 1.2",
+            Descripcion = "Descripción 1.2"
+        }
+    };
+    using (var db = new SqliteDbContext())
+    {
+        // agregar las actividades
+        db.Actividades.AddRange(actividades);
+        // guardar los cambios
+        db.SaveChanges();
+    }
+}
+
+static Docente BuscarDocentePorNumeroDeEmpleado(int numeroDeEmpleado)
+{
+    using (var db = new SqliteDbContext())
+    {
+        var docente = db.Docentes
+            .FirstOrDefault(d => d.NumDeEmpleado == numeroDeEmpleado);
+        return docente ??
+               throw new NullReferenceException($"Docente no encontrado con el número de empleado {numeroDeEmpleado}");
     }
 }
 
 
-static void codigoanterior()
+static void EliminarBaseDeDatos()
 {
-Console.WriteLine("Hello, World!");
-
-//Crear docentes y actividades
-var docente1 = new Docente();
-docente1.Nombres = "Jose Luis";
-docente1.Apellidos = "Gaxiola Castro";
-docente1.NumeroDeEmpleado = 1234;
-
-var actividad1 = new Actividad
-{
-    FechaDeRegistro = DateTime.Now,
-    DocenteId = docente1.Id,
-    Ejetematico = "Eje1",
-    Subeje = "Subeje2",
-    Descripcion = "No dormirse en clase"
-};
-
-var actividad2 = new Actividad
-{
-    FechaDeRegistro = DateTime.Today,
-    DocenteId = docente1.Id,
-    Ejetematico = "Eje2",
-    Subeje = "subeje3",
-    Descripcion = "Trabajar en viernes"
-};
-
-// TODO: Imprimir la descripcion de las actividades creadas y 
-// que muestre el nombre del docente
-
-Console.WriteLine($"Actividad: {actividad1.Descripcion}, Docente: {actividad1.DocenteId}");
-Console.WriteLine($"Actividad: {actividad2.Descripcion}, Docente: {actividad2.DocenteId}");
-
-// SELECT * FROM Actividades WHERE Docenteid=1;
-//Retornar 2 registros vinculados al profesor 1 
-docente1.Actividad.Add(actividad1);
-docente1.Actividad.Add(actividad2);
-//SELECT * FROM Docentes WHERE id=[actividad1.Docenteid];
-actividad1.Docente = docente1;
-actividad2.Docente = docente1;
-
-// TODO: Imprimir la descripcion de las actividades creadas
-//y que muestren el nombre del docente
-Console.WriteLine($"Docente: {docente1.Nombres} {docente1.Apellidos}");
-Console.WriteLine("Actividad");
-foreach (var Actividad in docente1.Actividad)
-{
-    Console.WriteLine(Actividad.Descripcion);
+    using (var db = new SqliteDbContext())
+    {
+        db.Database.EnsureDeleted();
+    }
 }
+
+static void RegistrarPrimerDocente()
+{
+    var docente = new Docente
+    {
+        NumDeEmpleado = 123,
+        Nombres = "Jose Luis",
+        Apellidos = "Gaxiola Castro"
+    };
+    using (var db = new SqliteDbContext())
+    {
+        // equivalente a INSERT de SQL
+        db.Docentes.Add(docente);
+        db.SaveChanges();
+    }
+}
+
+static void CrearBaseDeDatos()
+{
+    // Resources tienen métodos para abrir y cerrar acciones
+    using (var db = new SqliteDbContext())
+    {
+        db.Database.EnsureCreated();
+    }
+}
+
+static void CodigoAnterior()
+{
+    Console.WriteLine("Hello, World!");
+
+    // Crear docentes y actividades
+    var docente1 = new Docente();
+    docente1.Nombres = "José Luis";
+    docente1.Apellidos = "Gaxiola Castro";
+    docente1.NumDeEmpleado = 1234;
+    // docente1.Id = 1;
+
+    var actividad1 = new Actividad
+    {
+        FechaDeRegistro = DateTime.Now,
+        DocenteId = docente1.Id,
+        EjeTematico = "Eje 1",
+        Subeje = "Subeje 2",
+        Descripcion = "No dormirse en clase"
+    };
+
+    var actividad2 = new Actividad
+    {
+        FechaDeRegistro = DateTime.Today,
+        DocenteId = docente1.Id,
+        EjeTematico = "Eje 2",
+        Subeje = "Subeje 3",
+        Descripcion = "Trabajar en viernes"
+    };
+
+    // TODO: Imprimir la descripción de las actividades creadas 
+    // y que muestre el nombre del docente
+    Console.WriteLine($"Actividad: {actividad1.Descripcion}, Docente: {actividad1.DocenteId}");
+    Console.WriteLine($"Actividad: {actividad2.Descripcion}, Docente: {actividad2.DocenteId}");
+
+
+    // SELECT * FROM Actividades WHERE DocenteId=1;
+    // Retornar 2 registros vinculados al profesor 1
+    docente1.Actividades.Add(actividad1);
+    docente1.Actividades.Add(actividad2);
+
+    // SELECT * FROM Docentes WHERE Id=[actividad1.DocenteId];
+    actividad1.Docente = docente1;
+    actividad2.Docente = docente1;
+
+    // TODO: Imprimir la descripción de las actividades creadas 
+    // y que muestre el nombre del docente
+    Console.WriteLine($"Docente: {docente1.Nombres} {docente1.Apellidos}");
+    Console.WriteLine("Actividades:");
+    foreach (var actividad in docente1.Actividades)
+    {
+        Console.WriteLine(actividad.Descripcion);
+    }
 }
